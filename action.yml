@@ -2,7 +2,7 @@ name: 'Generate dockerfile'
 description: 'Generate dotnet app dockerfile'
 
 inputs:
-  version:
+  dotnet-version:
     description: 'Dotnet Version'
     default: "6.0-alpine"
 
@@ -13,13 +13,13 @@ runs:
       shell: bash
       run: |
         cat > dockerfile << EOF
-        FROM mcr.microsoft.com/dotnet/aspnet:${{ inputs.version }} AS base
+        FROM mcr.microsoft.com/dotnet/aspnet:${{ inputs.dotnet-version }} AS base
         ENV ASPNETCORE_ENVIRONMENT=Production
         WORKDIR /app
         VOLUME [ "/app" ]
         EXPOSE 80 443
 
-        FROM mcr.microsoft.com/dotnet/sdk:${{ inputs.version }} AS build
+        FROM mcr.microsoft.com/dotnet/sdk:${{ inputs.dotnet-version }} AS build
         ARG APP \\
             ADDITIONAL_ARGUMENTS \\
             NUGET_API_KEY \\
@@ -28,9 +28,7 @@ runs:
         COPY . /sources
 
         RUN if [ ! -z "\$NUGET_API_KEY" ] && [ ! -z "\$NUGET_API_URL" ]; then dotnet nuget add source --username USERNAME --password \$NUGET_API_KEY --store-password-in-clear-text --name github "\$NUGET_API_URL"; fi
-        RUN export PROJECT_PATH=`find . -type f -iname "${APP}.csproj"`
-        RUN dotnet restore "\$PROJECT_PATH" --no-cache
-        RUN dotnet publish "\$PROJECT_PATH" \${ADDITIONAL_ARGUMENTS} -o /dist
+        RUN export PROJECT_FILE=\`find . -type f -iname "\${APP}.csproj"\` && cd \$(dirname \$PROJECT_FILE) && dotnet restore --no-cache && dotnet publish \${ADDITIONAL_ARGUMENTS} -o /dist
 
         FROM base AS final
         WORKDIR /app
