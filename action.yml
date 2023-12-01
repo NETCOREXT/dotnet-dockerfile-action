@@ -21,11 +21,13 @@ runs:
 
         FROM mcr.microsoft.com/dotnet/sdk:${{ inputs.dotnet-version }} AS build
         ARG APP \\
+            BRANCH \\
             ADDITIONAL_ARGUMENTS \\
             NUGET_API_KEY \\
             NUGET_API_URL \\
             NUGET_XMLDOC_MODE=skip
-        ENV NUGET_XMLDOC_MODE=$NUGET_XMLDOC_MODE
+        ENV NUGET_XMLDOC_MODE=$NUGET_XMLDOC_MODE \\
+            BRANCH=$BRANCH
 
         WORKDIR /sources
         COPY . /sources
