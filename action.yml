@@ -4,7 +4,7 @@ description: 'Generate dotnet app dockerfile'
 inputs:
   dotnet-version:
     description: 'Dotnet Version'
-    default: "6.0-alpine"
+    default: "6.0"
 
 runs:
   using: "composite"
