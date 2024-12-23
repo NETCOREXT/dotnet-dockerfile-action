@@ -5,6 +5,9 @@ inputs:
   dotnet-version:
     description: 'Dotnet Version'
     default: "6.0"
+  expand-command:
+    description: 'Expand command to base image'
+    default: ""
 
 runs:
   using: "composite"
@@ -15,6 +18,7 @@ runs:
         cat > dockerfile << EOF
         FROM mcr.microsoft.com/dotnet/aspnet:${{ inputs.dotnet-version }} AS base
         ENV ASPNETCORE_ENVIRONMENT=Production
+        RUN if [ ! -z "${{ inputs.expand-command }}" ]; then ${{ inputs.expand-command }}; fi
         WORKDIR /app
         VOLUME [ "/app" ]
         EXPOSE 80 443
