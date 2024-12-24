@@ -18,7 +18,7 @@ runs:
         cat > dockerfile << EOF
         FROM mcr.microsoft.com/dotnet/aspnet:${{ inputs.dotnet-version }} AS base
         ENV ASPNETCORE_ENVIRONMENT=Production
-        RUN if [ ! -z "${{ inputs.expand-command }}" ]; then ${{ inputs.expand-command }}; fi
+        RUN if [ ! -z "${{ inputs.expand-command }}" ]; then echo "${{ inputs.expand-command }}"; ${{ inputs.expand-command }}; fi
         WORKDIR /app
         VOLUME [ "/app" ]
         EXPOSE 80 443
