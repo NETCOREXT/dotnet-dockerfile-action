@@ -36,8 +36,8 @@ runs:
         WORKDIR /sources
         COPY . /sources
 
-        RUN if [ ! -z "\$NUGET_API_KEY" ] && [ ! -z "\$NUGET_API_URL" ]; then dotnet nuget add source --username USERNAME --password \$NUGET_API_KEY --store-password-in-clear-text --name github "\$NUGET_API_URL"; fi
-        RUN if [ ! -z "\$NUGET_API_KEY_2" ] && [ ! -z "\$NUGET_API_URL_2" ]; then dotnet nuget add source --username USERNAME --password \$NUGET_API_KEY_2 --store-password-in-clear-text --name github "\$NUGET_API_URL_2"; fi
+        RUN if [ ! -z "\$NUGET_API_KEY" ] && [ ! -z "\$NUGET_API_URL" ]; then dotnet nuget add source --username USERNAME --password \$NUGET_API_KEY --store-password-in-clear-text --name custom-nuget "\$NUGET_API_URL"; fi
+        RUN if [ ! -z "\$NUGET_API_KEY_2" ] && [ ! -z "\$NUGET_API_URL_2" ]; then dotnet nuget add source --username USERNAME --password \$NUGET_API_KEY_2 --store-password-in-clear-text --name custom-nuget-2 "\$NUGET_API_URL_2"; fi
         RUN export PROJECT_FILE=\`find . -type f -iname "\${APP}.csproj"\` && cd \$(dirname \$PROJECT_FILE) && dotnet restore --no-cache && dotnet publish \${ADDITIONAL_ARGUMENTS} -o /dist
 
         FROM base AS final
